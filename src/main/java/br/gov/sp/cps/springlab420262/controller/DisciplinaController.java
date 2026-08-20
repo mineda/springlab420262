@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import br.gov.sp.cps.springlab420262.entity.Disciplina;
 import br.gov.sp.cps.springlab420262.service.DisciplinaService;
 
@@ -28,21 +30,25 @@ public class DisciplinaController {
     }
 
     @GetMapping
+    @JsonView(View.DisciplinaView.class)
     public List<Disciplina> buscarTodos() {
         return service.buscarTodos();
     }
 
     @GetMapping("/{id}")
+    @JsonView(View.DisciplinaView.class)
     public Disciplina buscarPorId(@PathVariable("id") Long id) {
         return service.buscarPorId(id);
     }
 
     @GetMapping("/param")
+    @JsonView(View.DisciplinaView.class)
     public Disciplina buscarPorIdParametro(@RequestParam("id") Long id) {
         return service.buscarPorId(id);
     }
 
     @PostMapping
+    @JsonView(View.DisciplinaView.class)
     public ResponseEntity<Disciplina> cadastrar(@RequestBody Disciplina disciplina) {
         Disciplina novaDisciplina = service.cadastrar(disciplina);
         return ResponseEntity.

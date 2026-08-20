@@ -2,6 +2,9 @@ package br.gov.sp.cps.springlab420262.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
+import br.gov.sp.cps.springlab420262.controller.View;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,12 +24,15 @@ public class Disciplina {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "dis_id")
+    @JsonView({View.DisciplinaView.class, View.CursoView.class})
     private Long id;
 
     @Column(name = "dis_codigo")
+    @JsonView({View.DisciplinaView.class, View.CursoView.class})
     private String codigo;
 
     @Column(name = "dis_nome")
+    @JsonView({View.DisciplinaView.class})
     private String nome;
 
     @Column(name = "dis_carga_horaria")
@@ -34,6 +40,7 @@ public class Disciplina {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dis_cur_id")
+    @JsonView({View.DisciplinaView.class})
     private Curso curso;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -42,6 +49,7 @@ public class Disciplina {
         joinColumns = @JoinColumn(name = "mat_dis_id"),
         inverseJoinColumns = @JoinColumn(name = "mat_aln_id")
     )
+    @JsonView({View.DisciplinaView.class})
     private Set<Aluno> alunos;
 
     public Disciplina(String codigo, String nome, Integer cargaHoraria, Curso curso) {
