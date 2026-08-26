@@ -1,12 +1,15 @@
 package br.gov.sp.cps.springlab420262.service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import br.gov.sp.cps.springlab420262.entity.Aluno;
 import br.gov.sp.cps.springlab420262.entity.Disciplina;
 import br.gov.sp.cps.springlab420262.repository.DisciplinaRepository;
 
@@ -43,9 +46,11 @@ public class DisciplinaServiceImpl implements DisciplinaService {
         }
         disciplina.setCurso(cursoService.buscarPorId(disciplina.getCurso().getId()));
         if(disciplina.getAlunos() != null && !disciplina.getAlunos().isEmpty()) {
+            Set<Aluno> alunos = new HashSet<>();
             disciplina.getAlunos().forEach(aluno -> {
-                alunoService.buscarPorId(aluno.getId());
+                alunos.add(alunoService.buscarPorId(aluno.getId()));
             });
+            disciplina.setAlunos(alunos);
         }
 
         return repo.save(disciplina);
@@ -63,6 +68,19 @@ public class DisciplinaServiceImpl implements DisciplinaService {
     @Override
     public List<Disciplina> buscarTodos() {
         return repo.findAll();
+    }
+
+    @Override
+    @Transactional
+    public void matricularAluno(Long disciplinaId, Long alunoId) {
+        Disciplina disciplina = buscarPorId(disciplinaId);
+        Aluno aluno = alunoService.buscarPorId(alunoId);
+        if(disciplina.getAlunos() == null) {
+            disciplina.setAlunos(new HashSet<>());
+        }
+        disciplina.getAlunos().add(aluno);
+        
+        repo.save(disciplina);
     }
     
 }

@@ -11,5 +11,7 @@ public interface DisciplinaService {
     public Disciplina buscarPorId(Long id);
 
     public List<Disciplina> buscarTodos();
+
+    public void matricularAluno(Long disciplinaId, Long alunoId);
     
 }

@@ -1,6 +1,7 @@
 package br.gov.sp.cps.springlab420262.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -36,9 +37,11 @@ public class CursoServiceImpl implements CursoService {
         if(id == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O ID não pode ser nulo.");
         }
-        return repo.findById(id).orElseThrow(
-            () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso não encontrado.")
-        );
+        Optional<Curso> cursoOp = repo.findById(id);
+        if(cursoOp.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso não encontrado.");
+        }
+        return cursoOp.get();
     }
 
     @Override
